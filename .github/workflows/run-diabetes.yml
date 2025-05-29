@@ -26,8 +26,8 @@ jobs:
     - name: Run script
       run: python diabetesdt.py
 
-- name: Upload decision tree plot as artifact
-  uses: actions/upload-artifact@v4
-  with:
-    name: decision-tree-plot
-    path: decision_tree.png
+    - name: Upload decision tree plot as artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: decision-tree-plot
+        path: decision_tree.png
