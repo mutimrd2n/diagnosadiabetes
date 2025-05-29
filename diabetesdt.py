@@ -6,29 +6,23 @@ from sklearn.metrics import accuracy_score, confusion_matrix, classification_rep
 
 def main():
     # 1. LOAD DATA
-    # Pastikan file "diabetes.csv" berada di folder yang sama dengan script ini.
     df = pd.read_csv("diabetes.csv")
     print("Ukuran Dataset:", df.shape)
     print("5 data pertama:\n", df.head())
 
     # 2. PREPROCESSING DATA
-    # Menggantikan nilai 0 pada kolom-kolom dimana 0 tidak logis (Glucose, BloodPressure, SkinThickness, Insulin, BMI)
     cols_to_fix = ['Glucose', 'BloodPressure', 'SkinThickness', 'Insulin', 'BMI']
     for col in cols_to_fix:
         median_value = df[col].median()
         df[col] = df[col].replace(0, median_value)
     
-    # Verifikasi bahwa tidak ada lagi nilai 0 pada kolom-kolom tersebut
     for col in cols_to_fix:
         print(f"Jumlah nilai 0 pada kolom '{col}' setelah perbaikan: {(df[col] == 0).sum()}")
 
     # 3. MEMISAHKAN FITUR DAN TARGET
-    # Fitur (X): Semua kolom kecuali "Outcome"
-    # Target (y): Kolom "Outcome"
     X = df.drop("Outcome", axis=1)
     y = df["Outcome"]
 
-    # Membagi dataset menjadi data training (80%) dan testing (20%)
     X_train, X_test, y_train, y_test = train_test_split(
         X, y, test_size=0.2, random_state=42
     )
@@ -38,13 +32,9 @@ def main():
     model.fit(X_train, y_train)
 
     # 5. EVALUASI MODEL
-    # Prediksi pada data testing
     y_pred = model.predict(X_test)
-    # Hitung akurasi
     accuracy = accuracy_score(y_test, y_pred)
-    # Hitung confusion matrix
     conf_matrix = confusion_matrix(y_test, y_pred)
-    # Classification report (precision, recall, F1-score)
     class_report = classification_report(y_test, y_pred)
 
     print("\n===== Evaluasi Model =====")
@@ -61,7 +51,8 @@ def main():
               class_names=["Non-Diabetes", "Diabetes"],
               filled=True)
     plt.title("Visualisasi Pohon Keputusan - Diagnosis Diabetes")
-    plt.show()
+    plt.savefig("decision_tree.png")  # ⬅ ini nyimpan file PNG
+    print("Plot pohon keputusan telah disimpan sebagai 'decision_tree.png'.")
 
 if __name__ == "__main__":
     main()
